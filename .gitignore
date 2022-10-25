@@ -1,0 +1,8 @@
+Library/
+Bin/
+Temp/
+.vs/
+obj/
+*.csproj
+*.sln
+Packages/packages-lock.json
