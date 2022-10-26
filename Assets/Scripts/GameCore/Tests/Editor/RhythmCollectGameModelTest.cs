@@ -43,20 +43,22 @@ public class RhythmCollectGameModelTest
 
         bool isCorrectClick = false;
         bool isEventReceived = false;
+        bool isTriggered = false;
 
-        collectItem.OnTriggerMatchHeadingItem += (isMatch) =>
+        collectItem.OnTriggerMatchHeadingItem += (clickedItem) =>
         {
-            isCorrectClick = isMatch;
+            isCorrectClick = clickedItem.IsCorrectClick;
+            isTriggered = clickedItem.IsTriggered;
             isEventReceived = true;
         };
 
-        Assert.AreEqual(false, collectItem.isTriggered);
+        Assert.AreEqual(false, isTriggered);
 
         collectItem.TriggerItem(currentHeadings);
 
         Assert.AreEqual(result_isCorrectClick, isCorrectClick);
         Assert.AreEqual(true, isEventReceived);
-        Assert.AreEqual(true, collectItem.isTriggered);
+        Assert.AreEqual(true, isTriggered);
     }
 
     [Test]

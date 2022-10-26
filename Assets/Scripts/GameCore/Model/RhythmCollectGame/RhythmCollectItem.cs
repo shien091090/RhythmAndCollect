@@ -9,13 +9,14 @@ namespace GameCore
         private string[] attributeTypes;
         private int basePoint;
         private int baseHpIncrease;
-        public bool isTriggered { private set; get; }
+        public bool IsTriggered { private set; get; }
+        public bool IsCorrectClick { private set; get; }
 
-        public event Action<bool> OnTriggerMatchHeadingItem;
+        public event Action<RhythmCollectItem> OnTriggerMatchHeadingItem;
 
         public RhythmCollectItem(string _key, string[] _attributes, int _basePoint, int _baseHpIncrease)
         {
-            isTriggered = false;
+            IsTriggered = false;
             collectItemKey = _key;
             attributeTypes = _attributes;
             basePoint = _basePoint;
@@ -24,9 +25,9 @@ namespace GameCore
 
         public void TriggerItem(string[] currentHeadings)
         {
-            isTriggered = true;
-            bool isMatchHeading = IsAttributeMatchHeading(currentHeadings);
-            OnTriggerMatchHeadingItem?.Invoke(isMatchHeading);
+            IsTriggered = true;
+            IsCorrectClick = IsAttributeMatchHeading(currentHeadings);
+            OnTriggerMatchHeadingItem?.Invoke(this);
         }
 
         private bool IsAttributeMatchHeading(string[] currentHeadings)
