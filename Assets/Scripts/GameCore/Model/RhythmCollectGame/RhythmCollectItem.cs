@@ -9,7 +9,7 @@ namespace GameCore
         private string[] attributeTypes;
         private int basePoint;
         private int baseHpIncrease;
-        private bool isTriggered;
+        public bool isTriggered { private set; get; }
 
         public event Action<bool> OnTriggerMatchHeadingItem;
 

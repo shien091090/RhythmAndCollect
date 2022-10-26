@@ -25,7 +25,7 @@ public class RhythmCollectGameModelTest
     [TestCase(false, "翅膀,紅色", true)] //Item屬性包含且多餘題目(排列順序打散)
     [TestCase(false, "紅色,香菇,翅膀,火鍋", false)] //題目包含且多餘Item屬性
     [TestCase(false, "香菇,紅色,火鍋,翅膀", false)] //題目包含且多餘Item屬性(排列順序打散)
-    public void LogicTest_ClickCollectItem(bool attributeIsEmpty, string currentHeadingJoinString, bool result_isCorrectClick)
+    public void LogicTest_ClickCollectItemAndCheckIsCorrect(bool attributeIsEmpty, string currentHeadingJoinString, bool result_isCorrectClick)
     {
         //set heading
         //set rhythm Timing
@@ -50,10 +50,13 @@ public class RhythmCollectGameModelTest
             isEventReceived = true;
         };
 
+        Assert.AreEqual(false, collectItem.isTriggered);
+
         collectItem.TriggerItem(currentHeadings);
 
         Assert.AreEqual(result_isCorrectClick, isCorrectClick);
         Assert.AreEqual(true, isEventReceived);
+        Assert.AreEqual(true, collectItem.isTriggered);
     }
 
     [Test]
