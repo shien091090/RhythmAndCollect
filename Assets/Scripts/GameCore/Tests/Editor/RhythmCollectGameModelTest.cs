@@ -62,6 +62,29 @@ public class RhythmCollectGameModelTest
     }
 
     [Test]
+    [TestCase(0, 0)] //0bpm = 每10秒 0 beats
+    [TestCase(6, 1)] //6bpm = 每10秒 1 beats
+    [TestCase(120, 20)] //120bpm = 每10秒 20 beats
+    [TestCase(130, 21)] //130bpm = 每10秒 21 beats
+    public void LogicTest_RepeatToBeatIn10Seconds(int bpm, int result_beatTimes)
+    {
+        BPMController bPMController = new BPMController(bpm);
+
+        float countDownTimer = 10;
+        int beatTimes = 0;
+        float freq = 0.00001f;
+        bPMController.OnBeat += () => { beatTimes++; };
+
+        while (countDownTimer > 0)
+        {
+            bPMController.Update(freq);
+            countDownTimer -= freq;
+        }
+
+        Assert.AreEqual(result_beatTimes, beatTimes);
+    }
+
+    [Test]
     public void LogicTest_CreateHeading()
     {
 
