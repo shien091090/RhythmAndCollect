@@ -1,11 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace GameCore
+﻿namespace GameCore
 {
-    public class RhythmCollectGameModel
+    public partial class RhythmCollectGameModel : ASingleton<RhythmCollectGameModel>
     {
+        public string[] currentHeadings { private set; get; }
 
+        private void Init()
+        {
+
+        }
+
+        public void SetCurrentHeadings(string[] newHeadings)
+        {
+            currentHeadings = newHeadings;
+        }
     }
 }
