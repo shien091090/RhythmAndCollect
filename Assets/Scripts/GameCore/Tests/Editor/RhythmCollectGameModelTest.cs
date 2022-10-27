@@ -12,6 +12,37 @@ public class RhythmCollectGameModelTest
     public void InitTest()
     {
         model = RhythmCollectGameModel.Instance;
+        model.SetCurrentHeadings(new string[] { "紅色", "香菇", "翅膀" });
+
+        HpController hpController = new HpController(100);
+        model.SetHpController(hpController);
+
+        Func<float, float> EvaluateFunc = (t) =>
+        {
+            return t;
+        };
+        BPMController bpmController = new BPMController(30, EvaluateFunc);
+        model.SetBPMController(bpmController);
+    }
+    
+    [Test] //BPM30, 每秒Update一次
+    //在拍子上 符合題目
+    //在拍子上 不符合題目
+    //不在拍子上 符合題目
+    //不在拍子上 不符合題目
+    //尚未第一拍
+    //沒有題目
+    //result add score
+    //result add hp
+    public void IntegrationTest_ClickCollectItem(bool isCurrentHeadingIsNull, bool isMatchHeadings, int clickTimeSecond)
+    {
+        string[] attributes = null;
+        if (isMatchHeadings)
+            attributes = model.currentHeadings;
+        else
+            attributes = new string[] { "黃色" };
+
+        RhythmCollectItem collectItem = new RhythmCollectItem(string.Empty, attributes, 10, 10);
     }
 
     [Test]
@@ -26,10 +57,6 @@ public class RhythmCollectGameModelTest
     [TestCase(false, "香菇,紅色,火鍋,翅膀", false)] //題目包含且多餘Item屬性(排列順序打散)
     public void LogicTest_ClickCollectItemAndCheckIsCorrect(bool attributeIsEmpty, string currentHeadingJoinString, bool result_isCorrectClick)
     {
-        //set heading
-        //set rhythm Timing
-        //set now hp state
-
         string[] currentHeadings = currentHeadingJoinString.Split(',');
         if (currentHeadingJoinString == string.Empty)
             currentHeadings = null;
