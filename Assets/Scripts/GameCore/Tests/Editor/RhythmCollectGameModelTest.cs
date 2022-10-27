@@ -1,8 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
-using UnityEngine;
-using UnityEngine.TestTools;
 using GameCore;
 
 public class RhythmCollectGameModelTest
@@ -64,24 +63,55 @@ public class RhythmCollectGameModelTest
     [Test]
     [TestCase(0, 0)] //0bpm = 每10秒 0 beats
     [TestCase(6, 1)] //6bpm = 每10秒 1 beats
-    [TestCase(120, 20)] //120bpm = 每10秒 20 beats
-    [TestCase(130, 21)] //130bpm = 每10秒 21 beats
+    [TestCase(60, 10)] //60bpm = 每10秒 10 beats
     public void LogicTest_RepeatToBeatIn10Seconds(int bpm, int result_beatTimes)
     {
-        BPMController bPMController = new BPMController(bpm);
+        BPMController bPMController = new BPMController(bpm, null);
 
-        float countDownTimer = 10;
         int beatTimes = 0;
-        float freq = 0.00001f;
         bPMController.OnBeat += () => { beatTimes++; };
 
-        while (countDownTimer > 0)
+        for (int i = 0; i < 10; i++)
         {
-            bPMController.Update(freq);
-            countDownTimer -= freq;
+            bPMController.Update(1);
         }
 
         Assert.AreEqual(result_beatTimes, beatTimes);
+    }
+
+    [Test]
+    [TestCase(0, 0)] //第0秒 未打中拍子(因為第一拍還沒下)
+    [TestCase(1, 0)] //第1秒 未打中拍子(因為第一拍還沒下)
+    [TestCase(2, 1)] //第2秒 打中拍子
+    [TestCase(3, 0)] //第3秒 未打中拍子
+    [TestCase(4, 1)] //第4秒 打中拍子
+    public void LogicTest_GetBeatPrecisionRate(float triggerTime, float result_precisionRate)
+    {
+        Func<float, float> EvaluateFunc = (t) => 
+        {
+            return t;
+        };
+
+        BPMController bPMController = new BPMController(30, EvaluateFunc); //每2秒1beat
+
+        int updateTimes = 4;
+        int beatTimes = 0;
+        bPMController.OnBeat += () => { beatTimes++; };
+
+        for (int timeIndex = 0; timeIndex <= updateTimes; timeIndex++)
+        {
+            if (timeIndex == triggerTime)
+            {
+                float precisionRate = bPMController.GetBeatPrecisionRate();
+
+                Assert.AreEqual(result_precisionRate, precisionRate);
+                return;
+            }
+
+            bPMController.Update(1);
+        }
+
+        Assert.Fail("No Triggered");
     }
 
     [Test]
