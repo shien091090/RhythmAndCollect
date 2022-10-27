@@ -133,8 +133,31 @@ public class RhythmCollectGameModelTest
     }
 
     [Test]
-    public void LogicTest_SetHp()
+    [TestCase(100, 10, 100, false)] //滿血 +血
+    [TestCase(100, -10, 90, false)] //滿血 -血
+    [TestCase(100, -150, 0, true)] //滿血 -到死
+    [TestCase(50, 10, 60, false)] //殘血 +血
+    [TestCase(50, 60, 100, false)] //殘血 +血到超過
+    [TestCase(50, 0, 50, false)] //殘血 +0
+    [TestCase(50, -20, 30, false)] //殘血 -血
+    [TestCase(50, -50, 0, true)] //殘血 - 血到死
+    public void LogicTest_AddHp(int initHp, int addHp, int result_newHp, bool result_isDead)
     {
+        HpController hp = new HpController(100, 0);
+        hp.SetHp(initHp);
 
+        int oldHp = 0;
+        int newHp = 0;
+        hp.OnHpChangeTo += (beforeHp, currentHp) =>
+        {
+            oldHp = beforeHp;
+            newHp = currentHp;
+        };
+
+        hp.AddHp(addHp);
+
+        Assert.AreEqual(oldHp, initHp);
+        Assert.AreEqual(result_newHp, newHp);
+        Assert.AreEqual(result_isDead, hp.IsDead);
     }
 }
