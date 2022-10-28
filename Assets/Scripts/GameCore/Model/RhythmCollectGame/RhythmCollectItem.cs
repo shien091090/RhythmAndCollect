@@ -7,8 +7,8 @@ namespace GameCore
     {
         private string collectItemKey;
         private string[] attributeTypes;
-        private int basePoint;
-        private int baseHpIncrease;
+        public int basePoint { private set; get; }
+        public int baseHpIncrease { private set; get; }
         public bool IsTriggered { private set; get; }
         public bool IsCorrectClick { private set; get; }
 

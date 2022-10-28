@@ -8,6 +8,7 @@ namespace GameCore
         public event Action OnDead;
         public event Action OnBeat;
         public event Action<RhythmCollectItem> OnClickCollectItem;
+        public event Action<int> OnAddPoint;
 
         public void TriggerHpChangeEvent(int beforeHp, int afterHp)
         {
@@ -27,6 +28,11 @@ namespace GameCore
         public void TriggerClickCollectItem(RhythmCollectItem collectItem)
         {
             OnClickCollectItem?.Invoke(collectItem);
+        }
+
+        public void TriggerAddPointEvent(int point)
+        {
+            OnAddPoint?.Invoke(point);
         }
     }
 }
