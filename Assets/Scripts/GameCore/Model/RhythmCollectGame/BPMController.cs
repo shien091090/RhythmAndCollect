@@ -19,8 +19,6 @@ namespace GameCore
 
         private float timer;
 
-        public event Action OnBeat;
-
         public BPMController(int _bpm, Func<float, float> _evaluateFunc)
         {
             timer = 0;
@@ -40,7 +38,7 @@ namespace GameCore
 
             if (timer >= GetWaitSecondsToBeatOne)
             {
-                OnBeat?.Invoke();
+                RhythmCollectGameModel_EventHandler.Instance.TriggerBeatEvent();
                 isAlreadyBeatFirstTime = true;
                 timer = 0;
             }

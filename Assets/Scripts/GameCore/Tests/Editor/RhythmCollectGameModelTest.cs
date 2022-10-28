@@ -71,7 +71,7 @@ public class RhythmCollectGameModelTest
         bool isEventReceived = false;
         bool isTriggered = false;
 
-        collectItem.OnTriggerMatchHeadingItem += (clickedItem) =>
+        RhythmCollectGameModel_EventHandler.Instance.OnClickCollectItem += (clickedItem) =>
         {
             isCorrectClick = clickedItem.IsCorrectClick;
             isTriggered = clickedItem.IsTriggered;
@@ -96,7 +96,7 @@ public class RhythmCollectGameModelTest
         BPMController bPMController = new BPMController(bpm, null);
 
         int beatTimes = 0;
-        bPMController.OnBeat += () => { beatTimes++; };
+        RhythmCollectGameModel_EventHandler.Instance.OnBeat += () => { beatTimes++; };
 
         for (int i = 0; i < 10; i++)
         {
@@ -123,7 +123,7 @@ public class RhythmCollectGameModelTest
 
         int updateTimes = 4;
         int beatTimes = 0;
-        bPMController.OnBeat += () => { beatTimes++; };
+        RhythmCollectGameModel_EventHandler.Instance.OnBeat += () => { beatTimes++; };
 
         for (int timeIndex = 0; timeIndex <= updateTimes; timeIndex++)
         {
@@ -175,7 +175,7 @@ public class RhythmCollectGameModelTest
 
         int oldHp = 0;
         int newHp = 0;
-        hp.OnHpChangeTo += (beforeHp, currentHp) =>
+        RhythmCollectGameModel_EventHandler.Instance.OnHpChangeTo += (beforeHp, currentHp) =>
         {
             oldHp = beforeHp;
             newHp = currentHp;

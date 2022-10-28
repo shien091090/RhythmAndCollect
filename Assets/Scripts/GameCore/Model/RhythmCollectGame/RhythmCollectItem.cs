@@ -12,8 +12,6 @@ namespace GameCore
         public bool IsTriggered { private set; get; }
         public bool IsCorrectClick { private set; get; }
 
-        public event Action<RhythmCollectItem> OnTriggerMatchHeadingItem;
-
         public RhythmCollectItem(string _key, string[] _attributes, int _basePoint, int _baseHpIncrease)
         {
             IsTriggered = false;
@@ -27,7 +25,7 @@ namespace GameCore
         {
             IsTriggered = true;
             IsCorrectClick = IsAttributeMatchHeading(currentHeadings);
-            OnTriggerMatchHeadingItem?.Invoke(this);
+            RhythmCollectGameModel_EventHandler.Instance.TriggerClickCollectItem(this);
         }
 
         private bool IsAttributeMatchHeading(string[] currentHeadings)

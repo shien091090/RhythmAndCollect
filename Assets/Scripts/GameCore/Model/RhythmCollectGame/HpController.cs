@@ -16,9 +16,6 @@ namespace GameCore
             }
         }
 
-        public event Action<int, int> OnHpChangeTo;
-        public event Action OnDead;
-
         public HpController(int _hpMax, int _hpMin = 0)
         {
             hpMax = _hpMax;
@@ -31,10 +28,10 @@ namespace GameCore
             int beforeHp = currentHp;
             currentHp = newHp;
 
-            OnHpChangeTo?.Invoke(beforeHp, newHp);
+            RhythmCollectGameModel_EventHandler.Instance.TriggerHpChangeEvent(beforeHp, newHp);
 
             if (currentHp <= hpMin)
-                OnDead?.Invoke();
+                RhythmCollectGameModel_EventHandler.Instance.TriggerDeadEvent();
         }
 
         public void AddHp(int increase)
