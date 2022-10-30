@@ -7,17 +7,17 @@ namespace GameCore
     {
         private string collectItemKey;
         private string[] attributeTypes;
-        public int basePoint { private set; get; }
+        public int baseScore { private set; get; }
         public int baseHpIncrease { private set; get; }
         public bool IsTriggered { private set; get; }
         public bool IsCorrectClick { private set; get; }
 
-        public RhythmCollectItem(string _key, string[] _attributes, int _basePoint, int _baseHpIncrease)
+        public RhythmCollectItem(string _key, string[] _attributes, int _baseScore, int _baseHpIncrease)
         {
             IsTriggered = false;
             collectItemKey = _key;
             attributeTypes = _attributes;
-            basePoint = _basePoint;
+            baseScore = _baseScore;
             baseHpIncrease = _baseHpIncrease;
         }
 

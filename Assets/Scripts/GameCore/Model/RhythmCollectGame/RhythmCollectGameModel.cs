@@ -27,7 +27,7 @@
             bpmController = _bpmController;
         }
 
-        public void OnClickCollectItem(RhythmCollectItem collectItem)
+        public void ClickCollectItem(RhythmCollectItem collectItem)
         {
             if (gameEvaluator == null)
                 return;
@@ -43,8 +43,8 @@
                 hpController.AddHp(hpIncrease);
             }
 
-            int pointIncrease = gameEvaluator.EvaluateAddPoint(collectItem.basePoint, precisionRate, collectItem.IsCorrectClick);
-            RhythmCollectGameModel_EventHandler.Instance.TriggerAddPointEvent(pointIncrease);
+            int scoreIncrease = gameEvaluator.EvaluateAddScore(collectItem.baseScore, precisionRate, collectItem.IsCorrectClick);
+            RhythmCollectGameModel_EventHandler.Instance.TriggerAddScoreEvent(scoreIncrease);
         }
     }
 }
