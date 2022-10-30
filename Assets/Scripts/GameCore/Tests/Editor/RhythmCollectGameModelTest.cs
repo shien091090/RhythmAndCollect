@@ -124,12 +124,16 @@ public class RhythmCollectGameModelTest
         int beatTimes = 0;
         RhythmCollectGameModel_EventHandler.Instance.OnBeat += () => { beatTimes++; };
 
+        int halfBeatTimes = 0;
+        RhythmCollectGameModel_EventHandler.Instance.OnHalfBeat += () => { halfBeatTimes++; };
+
         for (int i = 0; i < 10; i++)
         {
             bPMController.Update(1);
         }
 
         Assert.AreEqual(result_beatTimes, beatTimes);
+        Assert.AreEqual(result_beatTimes * 2, halfBeatTimes);
     }
 
     [Test]

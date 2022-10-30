@@ -7,6 +7,7 @@ namespace GameCore
         public event Action<int, int> OnHpChangeTo;
         public event Action OnDead;
         public event Action OnBeat;
+        public event Action OnHalfBeat;
         public event Action<RhythmCollectItem> OnClickCollectItem;
         public event Action<int> OnAddScore;
 
@@ -23,6 +24,11 @@ namespace GameCore
         public void TriggerBeatEvent()
         {
             OnBeat?.Invoke();
+        }
+
+        public void TriggerHalfBeatEvent()
+        {
+            OnHalfBeat?.Invoke();
         }
 
         public void TriggerClickCollectItem(RhythmCollectItem collectItem)

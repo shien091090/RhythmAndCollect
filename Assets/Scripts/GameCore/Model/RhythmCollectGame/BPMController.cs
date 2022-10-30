@@ -8,6 +8,7 @@ namespace GameCore
         private int bpm;
         IRhythmCollectGameEvaluator evaluator;
         public bool isAlreadyBeatFirstTime { private set; get; }
+        private bool isHalfBeat;
         private float timer;
         private float totalTime;
 
@@ -37,10 +38,19 @@ namespace GameCore
             timer += deltaTime;
             totalTime += deltaTime;
 
+            if(timer >= GetWaitSecondsToBeatOne / 2 &&
+                isHalfBeat == false)
+            {
+                RhythmCollectGameModel_EventHandler.Instance.TriggerHalfBeatEvent();
+                isHalfBeat = true;
+            }
+
             if (timer >= GetWaitSecondsToBeatOne)
             {
                 RhythmCollectGameModel_EventHandler.Instance.TriggerBeatEvent();
+                RhythmCollectGameModel_EventHandler.Instance.TriggerHalfBeatEvent();
                 isAlreadyBeatFirstTime = true;
+                isHalfBeat = false;
                 timer = 0;
             }
 
