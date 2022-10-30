@@ -4,12 +4,22 @@
     {
         public string[] currentHeadings { private set; get; }
         private HpController hpController;
-        private BPMController bpmController;
+        public BPMController bpmController { private set; get; }
         private IRhythmCollectGameEvaluator gameEvaluator;
 
         private void Init()
         {
 
+        }
+
+        public void SetRegisterEvent(bool isListen)
+        {
+            RhythmCollectGameModel_EventHandler.Instance.OnClickCollectItem -= ClickCollectItem;
+
+            if(isListen)
+            {
+                RhythmCollectGameModel_EventHandler.Instance.OnClickCollectItem += ClickCollectItem;
+            }
         }
 
         public void SetCurrentHeadings(string[] newHeadings)
@@ -27,7 +37,12 @@
             bpmController = _bpmController;
         }
 
-        public void ClickCollectItem(RhythmCollectItem collectItem)
+        public void SetEvaluator(IRhythmCollectGameEvaluator _evaluator)
+        {
+            gameEvaluator = _evaluator;
+        }
+
+        private void ClickCollectItem(RhythmCollectItem collectItem)
         {
             if (gameEvaluator == null)
                 return;
@@ -45,6 +60,12 @@
 
             int scoreIncrease = gameEvaluator.EvaluateAddScore(collectItem.baseScore, precisionRate, collectItem.IsCorrectClick);
             RhythmCollectGameModel_EventHandler.Instance.TriggerAddScoreEvent(scoreIncrease);
+        }
+
+        public void UpdateTime(float deltaTime)
+        {
+            if (bpmController != null)
+                bpmController.Update(deltaTime);
         }
     }
 }

@@ -6,8 +6,10 @@ namespace GameCore
     public class BPMController
     {
         private int bpm;
-        private Func<float, float> evaluateFunc;
-        private bool isAlreadyBeatFirstTime;
+        IRhythmCollectGameEvaluator evaluator;
+        public bool isAlreadyBeatFirstTime { private set; get; }
+        private float timer;
+        private float totalTime;
 
         public float GetWaitSecondsToBeatOne
         {
@@ -17,12 +19,10 @@ namespace GameCore
             }
         }
 
-        private float timer;
-
-        public BPMController(int _bpm, Func<float, float> _evaluateFunc)
+        public BPMController(int _bpm, IRhythmCollectGameEvaluator _evaluator)
         {
             timer = 0;
-            evaluateFunc = _evaluateFunc;
+            evaluator = _evaluator;
             isAlreadyBeatFirstTime = false;
             SetBPM(_bpm);
         }
@@ -35,6 +35,7 @@ namespace GameCore
         public void Update(float deltaTime)
         {
             timer += deltaTime;
+            totalTime += deltaTime;
 
             if (timer >= GetWaitSecondsToBeatOne)
             {
@@ -50,11 +51,11 @@ namespace GameCore
             if (isAlreadyBeatFirstTime == false)
                 return 0;
 
-            if (evaluateFunc == null)
+            if (evaluator == null)
                 return 0;
 
             float timeOffsetPer = Math.Abs(timer - ( GetWaitSecondsToBeatOne / 2 ) / ( GetWaitSecondsToBeatOne / 2 ));
-            float rate = evaluateFunc.Invoke(timeOffsetPer);
+            float rate = evaluator.EvaluateBeatPrecisionRate(timeOffsetPer);
             return rate;
         }
     }

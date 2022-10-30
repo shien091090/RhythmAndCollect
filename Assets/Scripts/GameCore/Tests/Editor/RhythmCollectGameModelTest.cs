@@ -17,24 +17,23 @@ public class RhythmCollectGameModelTest
         HpController hpController = new HpController(100);
         model.SetHpController(hpController);
 
-        Func<float, float> EvaluateFunc = (t) =>
-        {
-            return t;
-        };
-        BPMController bpmController = new BPMController(30, EvaluateFunc);
+        DummyGameEvaluator dummyEvaluator = new DummyGameEvaluator();
+        BPMController bpmController = new BPMController(30, dummyEvaluator);
         model.SetBPMController(bpmController);
+
+        model.SetEvaluator(dummyEvaluator);
+
+        model.SetRegisterEvent(true);
     }
-    
+
     [Test] //BPM30, 每秒Update一次
-    //在拍子上 符合題目
-    //在拍子上 不符合題目
-    //不在拍子上 符合題目
-    //不在拍子上 不符合題目
-    //尚未第一拍
-    //沒有題目
-    //result add score
-    //result add hp
-    public void IntegrationTest_ClickCollectItem(bool isCurrentHeadingIsNull, bool isMatchHeadings, int clickTimeSecond)
+    [TestCase(false, true, 2, 10, 10)] //在拍子上 符合題目
+    [TestCase(false, false, 2, 0, -5)] //在拍子上 不符合題目
+    [TestCase(false, true, 3, 0, 0)] //不在拍子上 符合題目
+    [TestCase(false, false, 3, 0, -5)] //不在拍子上 不符合題目
+    [TestCase(false, true, 1, 0, 0)] //尚未第一拍
+    [TestCase(true, true, 1, 0, 0)] //沒有題目
+    public void IntegrationTest_ClickCollectItem(bool isCurrentHeadingIsNull, bool isMatchHeadings, int clickTimeSecond, int result_appScore, int result_addHp)
     {
         string[] attributes = null;
         if (isMatchHeadings)
@@ -42,7 +41,34 @@ public class RhythmCollectGameModelTest
         else
             attributes = new string[] { "黃色" };
 
+        if (isCurrentHeadingIsNull)
+            model.SetCurrentHeadings(null);
+
+        HpController hpController = new HpController(100);
+        hpController.SetHp(50);
+        model.SetHpController(hpController);
+
+        int addScore = 0;
+        RhythmCollectGameModel_EventHandler.Instance.OnAddScore += (score) => { addScore = score; };
+
+        int addHp = 0;
+        RhythmCollectGameModel_EventHandler.Instance.OnHpChangeTo += (beforeHp, afterHp) => { addHp = afterHp - beforeHp; };
+
+        bool overFirstBeat = false;
+        RhythmCollectGameModel_EventHandler.Instance.OnBeat += () => { overFirstBeat = true; };
+
+        for (int i = 0; i < clickTimeSecond; i++)
+        {
+            model.UpdateTime(1);
+        }
+
         RhythmCollectItem collectItem = new RhythmCollectItem(string.Empty, attributes, 10, 10);
+        collectItem.TriggerItem(model.currentHeadings);
+
+        Assert.AreEqual(result_appScore, addScore);
+        Assert.AreEqual(result_addHp, addHp);
+        Assert.AreEqual(isMatchHeadings, collectItem.IsCorrectClick);
+        Assert.AreEqual(overFirstBeat, model.bpmController.isAlreadyBeatFirstTime);
     }
 
     [Test]
@@ -114,12 +140,8 @@ public class RhythmCollectGameModelTest
     [TestCase(4, 1)] //第4秒 打中拍子
     public void LogicTest_GetBeatPrecisionRate(float triggerTime, float result_precisionRate)
     {
-        Func<float, float> EvaluateFunc = (t) => 
-        {
-            return t;
-        };
-
-        BPMController bPMController = new BPMController(30, EvaluateFunc); //每2秒1beat
+        DummyGameEvaluator dummyEvaluator = new DummyGameEvaluator();
+        BPMController bPMController = new BPMController(30, dummyEvaluator); //每2秒1beat
 
         int updateTimes = 4;
         int beatTimes = 0;
