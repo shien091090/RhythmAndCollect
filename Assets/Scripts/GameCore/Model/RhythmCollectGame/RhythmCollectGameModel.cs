@@ -6,6 +6,7 @@
         private HpController hpController;
         public BPMController bpmController { private set; get; }
         private IRhythmCollectGameEvaluator gameEvaluator;
+        private IRhythmCollectItemSpawner collectItemSpawner;
 
         private void Init()
         {
@@ -40,6 +41,11 @@
         public void SetEvaluator(IRhythmCollectGameEvaluator _evaluator)
         {
             gameEvaluator = _evaluator;
+        }
+
+        public void SetCollectItemSpawner(IRhythmCollectItemSpawner _spawner)
+        {
+            collectItemSpawner = _spawner;
         }
 
         private void ClickCollectItem(RhythmCollectItem collectItem)

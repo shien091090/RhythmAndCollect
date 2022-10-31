@@ -188,6 +188,8 @@ public class RhythmCollectGameModelTest
     }
 
     [Test]
+    //場上Item越少, 每次補Item就補越多
+    //依照難易度, 越簡單每次補Item就有越大的Item占比符合題目
     public void LogicTest_SpawnCollectItem()
     {
 
