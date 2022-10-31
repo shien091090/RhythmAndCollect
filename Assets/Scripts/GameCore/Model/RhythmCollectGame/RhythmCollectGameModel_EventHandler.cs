@@ -10,6 +10,7 @@ namespace GameCore
         public event Action OnHalfBeat;
         public event Action<RhythmCollectItem> OnClickCollectItem;
         public event Action<RhythmCollectItem> OnCollectItemDisappeared;
+        public event Action<RhythmCollectItem> OnSpawnCollectItem;
         public event Action<int> OnAddScore;
 
         public void TriggerHpChangeEvent(int beforeHp, int afterHp)
@@ -40,6 +41,11 @@ namespace GameCore
         public void TriggerCollectItemDisappearEvent(RhythmCollectItem collectItem)
         {
             OnCollectItemDisappeared?.Invoke(collectItem);
+        }
+
+        public void TriggerSpawnCollectItemEvent(RhythmCollectItem collectItem)
+        {
+            OnSpawnCollectItem?.Invoke(collectItem);
         }
 
         public void TriggerAddScoreEvent(int score)

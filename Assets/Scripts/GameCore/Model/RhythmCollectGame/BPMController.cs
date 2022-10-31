@@ -11,12 +11,17 @@ namespace GameCore
         private UpdateTimer mainTimer;
         private UpdateTimer halfTimer;
 
-        public float GetWaitSecondsToBeatOne
+        public float GetBeatFreq
         {
             get
             {
-                return 60 / (float)bpm;
+                return GetWaitSecondsToBeatOne(bpm);
             }
+        }
+
+        public static float GetWaitSecondsToBeatOne(int bpm)
+        {
+            return 60 / (float)bpm;
         }
 
         public BPMController(int _bpm, IBeatPrecisionRateEvaluator _evaluator)
@@ -25,8 +30,8 @@ namespace GameCore
             isAlreadyBeatFirstTime = false;
             SetBPM(_bpm);
 
-            mainTimer = new UpdateTimer(GetWaitSecondsToBeatOne);
-            halfTimer = new UpdateTimer(GetWaitSecondsToBeatOne / 2);
+            mainTimer = new UpdateTimer(GetBeatFreq);
+            halfTimer = new UpdateTimer(GetBeatFreq / 2);
 
             mainTimer.OnTriggerTimer += OnTriggerMainTimer;
             halfTimer.OnTriggerTimer += OnTriggerHalfTimer;
@@ -62,7 +67,7 @@ namespace GameCore
             if (evaluator == null)
                 return 0;
 
-            float timeOffsetPer = Math.Abs(mainTimer.timer - ( GetWaitSecondsToBeatOne / 2 ) / ( GetWaitSecondsToBeatOne / 2 ));
+            float timeOffsetPer = Math.Abs(mainTimer.timer - ( GetBeatFreq / 2 ) / ( GetBeatFreq / 2 ));
             float rate = evaluator.EvaluateBeatPrecisionRate(timeOffsetPer);
             return rate;
         }

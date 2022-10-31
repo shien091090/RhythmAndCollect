@@ -5,21 +5,23 @@ namespace GameCore
 {
     public class RhythmCollectItem
     {
-        private string collectItemKey;
-        private string[] attributeTypes;
-        public int baseScore { private set; get; }
-        public int baseHpIncrease { private set; get; }
+        private RhythmCollectItemAttribute attributeInfo;
+        public int GetBaseScore { get { return attributeInfo.baseScore; } }
+        public int GetBaseHpIncrease { get { return attributeInfo.baseHpIncrease; } }
         public bool IsTriggered { private set; get; }
         public bool IsCorrectClick { private set; get; }
         public bool IsDisappeared { private set; get; }
 
         public RhythmCollectItem(string _key, string[] _attributes, int _baseScore, int _baseHpIncrease)
         {
+            attributeInfo = new RhythmCollectItemAttribute(_key, _attributes, _baseScore, _baseHpIncrease);
             IsTriggered = false;
-            collectItemKey = _key;
-            attributeTypes = _attributes;
-            baseScore = _baseScore;
-            baseHpIncrease = _baseHpIncrease;
+        }
+
+        public RhythmCollectItem(RhythmCollectItemAttribute _attributeInfo)
+        {
+            attributeInfo = _attributeInfo;
+            IsTriggered = false;
         }
 
         public void TriggerItem(string[] currentHeadings)
@@ -44,12 +46,12 @@ namespace GameCore
             if (currentHeadings == null || currentHeadings.Length <= 0)
                 return true;
 
-            if (attributeTypes == null || attributeTypes.Length <= 0)
+            if (attributeInfo.attributeTypes == null || attributeInfo.attributeTypes.Length <= 0)
                 return false;
 
             foreach (string heading in currentHeadings)
             {
-                if (attributeTypes.Contains(heading) == false)
+                if (attributeInfo.attributeTypes.Contains(heading) == false)
                     return false;
             }
 

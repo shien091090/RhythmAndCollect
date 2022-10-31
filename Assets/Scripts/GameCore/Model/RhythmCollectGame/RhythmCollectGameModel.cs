@@ -5,9 +5,8 @@
         public string[] currentHeadings { private set; get; }
         private HpController hpController;
         public BPMController bpmController { private set; get; }
-        private IBeatPrecisionRateEvaluator beatPrecisionRateEvaluator;
         private IRhythmCollectGameEvaluator gameEvaluator;
-        private IRhythmCollectItemSpawner collectItemSpawner;
+        private RhythmCollectItemSpawner collectItemSpawner;
 
         private void Init()
         {
@@ -39,17 +38,12 @@
             bpmController = _bpmController;
         }
 
-        public void SetBeatPrecisionRateEvaluator(IBeatPrecisionRateEvaluator _evaluator)
-        {
-            beatPrecisionRateEvaluator = _evaluator;
-        }
-
         public void SetGameEvaluator(IRhythmCollectGameEvaluator _evaluator)
         {
             gameEvaluator = _evaluator;
         }
 
-        public void SetCollectItemSpawner(IRhythmCollectItemSpawner _spawner)
+        public void SetCollectItemSpawner(RhythmCollectItemSpawner _spawner)
         {
             collectItemSpawner = _spawner;
         }
@@ -66,11 +60,11 @@
 
             if(hpController != null)
             {
-                int hpIncrease = gameEvaluator.EvaluateAddHp(collectItem.baseHpIncrease, precisionRate, collectItem.IsCorrectClick);
+                int hpIncrease = gameEvaluator.EvaluateAddHp(collectItem.GetBaseHpIncrease, precisionRate, collectItem.IsCorrectClick);
                 hpController.AddHp(hpIncrease);
             }
 
-            int scoreIncrease = gameEvaluator.EvaluateAddScore(collectItem.baseScore, precisionRate, collectItem.IsCorrectClick);
+            int scoreIncrease = gameEvaluator.EvaluateAddScore(collectItem.GetBaseScore, precisionRate, collectItem.IsCorrectClick);
             RhythmCollectGameModel_EventHandler.Instance.TriggerAddScoreEvent(scoreIncrease);
         }
 
