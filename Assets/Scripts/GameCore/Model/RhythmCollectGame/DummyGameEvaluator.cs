@@ -17,10 +17,5 @@
             else
                 return 0;
         }
-
-        public float EvaluateBeatPrecisionRate(float timeOffsetPer)
-        {
-            return timeOffsetPer;
-        }
     }
 }

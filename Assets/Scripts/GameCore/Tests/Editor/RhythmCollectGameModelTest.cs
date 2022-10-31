@@ -17,11 +17,12 @@ public class RhythmCollectGameModelTest
         HpController hpController = new HpController(100);
         model.SetHpController(hpController);
 
-        DummyGameEvaluator dummyEvaluator = new DummyGameEvaluator();
-        BPMController bpmController = new BPMController(30, dummyEvaluator);
+        DummyBeatPrecisionRateEvaluator dummyBeatPrecisionRateEvaluator = new DummyBeatPrecisionRateEvaluator();
+        BPMController bpmController = new BPMController(30, dummyBeatPrecisionRateEvaluator);
         model.SetBPMController(bpmController);
 
-        model.SetEvaluator(dummyEvaluator);
+        DummyGameEvaluator dummyGameEvaluator = new DummyGameEvaluator();
+        model.SetGameEvaluator(dummyGameEvaluator);
 
         model.SetRegisterEvent(true);
     }
@@ -158,8 +159,8 @@ public class RhythmCollectGameModelTest
     [TestCase(4, 1)] //第4秒 打中拍子
     public void LogicTest_GetBeatPrecisionRate(float triggerTime, float result_precisionRate)
     {
-        DummyGameEvaluator dummyEvaluator = new DummyGameEvaluator();
-        BPMController bPMController = new BPMController(30, dummyEvaluator); //每2秒1beat
+        DummyBeatPrecisionRateEvaluator dummyBeatPrecisionRateEvaluator = new DummyBeatPrecisionRateEvaluator();
+        BPMController bPMController = new BPMController(30, dummyBeatPrecisionRateEvaluator); //每2秒1beat
 
         int updateTimes = 4;
         int beatTimes = 0;

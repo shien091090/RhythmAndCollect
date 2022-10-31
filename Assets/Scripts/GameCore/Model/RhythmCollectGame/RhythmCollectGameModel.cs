@@ -5,6 +5,7 @@
         public string[] currentHeadings { private set; get; }
         private HpController hpController;
         public BPMController bpmController { private set; get; }
+        private IBeatPrecisionRateEvaluator beatPrecisionRateEvaluator;
         private IRhythmCollectGameEvaluator gameEvaluator;
         private IRhythmCollectItemSpawner collectItemSpawner;
 
@@ -38,7 +39,12 @@
             bpmController = _bpmController;
         }
 
-        public void SetEvaluator(IRhythmCollectGameEvaluator _evaluator)
+        public void SetBeatPrecisionRateEvaluator(IBeatPrecisionRateEvaluator _evaluator)
+        {
+            beatPrecisionRateEvaluator = _evaluator;
+        }
+
+        public void SetGameEvaluator(IRhythmCollectGameEvaluator _evaluator)
         {
             gameEvaluator = _evaluator;
         }

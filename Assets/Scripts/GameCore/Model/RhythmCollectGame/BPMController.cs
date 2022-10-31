@@ -6,7 +6,7 @@ namespace GameCore
     public class BPMController
     {
         private int bpm;
-        IRhythmCollectGameEvaluator evaluator;
+        IBeatPrecisionRateEvaluator evaluator;
         public bool isAlreadyBeatFirstTime { private set; get; }
         private UpdateTimer mainTimer;
         private UpdateTimer halfTimer;
@@ -19,11 +19,12 @@ namespace GameCore
             }
         }
 
-        public BPMController(int _bpm, IRhythmCollectGameEvaluator _evaluator)
+        public BPMController(int _bpm, IBeatPrecisionRateEvaluator _evaluator)
         {
             evaluator = _evaluator;
             isAlreadyBeatFirstTime = false;
             SetBPM(_bpm);
+
             mainTimer = new UpdateTimer(GetWaitSecondsToBeatOne);
             halfTimer = new UpdateTimer(GetWaitSecondsToBeatOne / 2);
 
