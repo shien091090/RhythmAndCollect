@@ -11,6 +11,7 @@ namespace GameCore
         public int baseHpIncrease { private set; get; }
         public bool IsTriggered { private set; get; }
         public bool IsCorrectClick { private set; get; }
+        public bool IsDisappeared { private set; get; }
 
         public RhythmCollectItem(string _key, string[] _attributes, int _baseScore, int _baseHpIncrease)
         {
@@ -23,9 +24,19 @@ namespace GameCore
 
         public void TriggerItem(string[] currentHeadings)
         {
+            if (IsDisappeared)
+                return;
+
             IsTriggered = true;
             IsCorrectClick = IsAttributeMatchHeading(currentHeadings);
             RhythmCollectGameModel_EventHandler.Instance.TriggerClickCollectItem(this);
+            Disappear();
+        }
+
+        public void Disappear()
+        {
+            IsDisappeared = true;
+            RhythmCollectGameModel_EventHandler.Instance.TriggerCollectItemDisappearEvent(this);
         }
 
         private bool IsAttributeMatchHeading(string[] currentHeadings)

@@ -104,13 +104,27 @@ public class RhythmCollectGameModelTest
             isEventReceived = true;
         };
 
-        Assert.AreEqual(false, isTriggered);
+        bool isDisappeared = false;
+        bool disappearedItemIsCorrectClick = false;
+        bool disappearedItemIsTriggered = false;
+        RhythmCollectGameModel_EventHandler.Instance.OnCollectItemDisappeared += (clickedItem) =>
+        {
+            isDisappeared = true;
+            disappearedItemIsCorrectClick = clickedItem.IsCorrectClick;
+            disappearedItemIsTriggered = clickedItem.IsTriggered;
+        };
+
+        Assert.IsFalse(isTriggered);
+        Assert.IsFalse(isDisappeared);
 
         collectItem.TriggerItem(currentHeadings);
 
         Assert.AreEqual(result_isCorrectClick, isCorrectClick);
-        Assert.AreEqual(true, isEventReceived);
-        Assert.AreEqual(true, isTriggered);
+        Assert.IsTrue(isEventReceived);
+        Assert.IsTrue(isTriggered);
+        Assert.IsTrue(isDisappeared);
+        Assert.AreEqual(result_isCorrectClick, disappearedItemIsCorrectClick);
+        Assert.AreEqual(isTriggered, disappearedItemIsTriggered);
     }
 
     [Test]
