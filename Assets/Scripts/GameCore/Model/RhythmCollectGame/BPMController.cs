@@ -8,9 +8,8 @@ namespace GameCore
         private int bpm;
         IRhythmCollectGameEvaluator evaluator;
         public bool isAlreadyBeatFirstTime { private set; get; }
-        private bool isHalfBeat;
-        private float timer;
-        private float totalTime;
+        private UpdateTimer mainTimer;
+        private UpdateTimer halfTimer;
 
         public float GetWaitSecondsToBeatOne
         {
@@ -22,10 +21,14 @@ namespace GameCore
 
         public BPMController(int _bpm, IRhythmCollectGameEvaluator _evaluator)
         {
-            timer = 0;
             evaluator = _evaluator;
             isAlreadyBeatFirstTime = false;
             SetBPM(_bpm);
+            mainTimer = new UpdateTimer(GetWaitSecondsToBeatOne);
+            halfTimer = new UpdateTimer(GetWaitSecondsToBeatOne / 2);
+
+            mainTimer.OnTriggerTimer += OnTriggerMainTimer;
+            halfTimer.OnTriggerTimer += OnTriggerHalfTimer;
         }
 
         public void SetBPM(int _bpm)
@@ -35,25 +38,19 @@ namespace GameCore
 
         public void Update(float deltaTime)
         {
-            timer += deltaTime;
-            totalTime += deltaTime;
+            mainTimer.Update(deltaTime);
+            halfTimer.Update(deltaTime);
+        }
 
-            if(timer >= GetWaitSecondsToBeatOne / 2 &&
-                isHalfBeat == false)
-            {
-                RhythmCollectGameModel_EventHandler.Instance.TriggerHalfBeatEvent();
-                isHalfBeat = true;
-            }
+        private void OnTriggerMainTimer()
+        {
+            isAlreadyBeatFirstTime = true;
+            RhythmCollectGameModel_EventHandler.Instance.TriggerBeatEvent();
+        }
 
-            if (timer >= GetWaitSecondsToBeatOne)
-            {
-                RhythmCollectGameModel_EventHandler.Instance.TriggerBeatEvent();
-                RhythmCollectGameModel_EventHandler.Instance.TriggerHalfBeatEvent();
-                isAlreadyBeatFirstTime = true;
-                isHalfBeat = false;
-                timer = 0;
-            }
-
+        private void OnTriggerHalfTimer()
+        {
+            RhythmCollectGameModel_EventHandler.Instance.TriggerHalfBeatEvent();
         }
 
         public float GetBeatPrecisionRate()
@@ -64,7 +61,7 @@ namespace GameCore
             if (evaluator == null)
                 return 0;
 
-            float timeOffsetPer = Math.Abs(timer - ( GetWaitSecondsToBeatOne / 2 ) / ( GetWaitSecondsToBeatOne / 2 ));
+            float timeOffsetPer = Math.Abs(mainTimer.timer - ( GetWaitSecondsToBeatOne / 2 ) / ( GetWaitSecondsToBeatOne / 2 ));
             float rate = evaluator.EvaluateBeatPrecisionRate(timeOffsetPer);
             return rate;
         }

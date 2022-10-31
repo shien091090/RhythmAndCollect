@@ -130,7 +130,7 @@ public class RhythmCollectGameModelTest
     [Test]
     [TestCase(0, 0)] //0bpm = 每10秒 0 beats
     [TestCase(6, 1)] //6bpm = 每10秒 1 beats
-    [TestCase(60, 10)] //60bpm = 每10秒 10 beats
+    [TestCase(30, 5)] //30bpm = 每10秒 5 beats
     public void LogicTest_RepeatToBeatIn10Seconds(int bpm, int result_beatTimes)
     {
         BPMController bPMController = new BPMController(bpm, null);
