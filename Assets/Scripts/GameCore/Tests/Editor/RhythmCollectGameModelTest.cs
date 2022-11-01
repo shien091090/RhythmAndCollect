@@ -24,6 +24,11 @@ public class RhythmCollectGameModelTest
         DummyGameEvaluator dummyGameEvaluator = new DummyGameEvaluator();
         model.SetGameEvaluator(dummyGameEvaluator);
 
+        DummyCollectItemSpawnFrequency dummySpawnFrequency = new DummyCollectItemSpawnFrequency();
+        DummyCollectItemSpawnAttribute dummySpawnAttribute = new DummyCollectItemSpawnAttribute();
+        RhythmCollectItemSpawner collectItemSpawner = new RhythmCollectItemSpawner(dummySpawnFrequency, dummySpawnAttribute, bpmController.bpm, model.currentHeadings);
+        model.SetCollectItemSpawner(collectItemSpawner);
+
         model.SetRegisterEvent(true);
     }
 
@@ -188,12 +193,87 @@ public class RhythmCollectGameModelTest
 
     }
 
-    [Test]
-    //場上Item越少, 每次補Item就補越多
-    //依照難易度, 越簡單每次補Item就有越大的Item占比符合題目
+    [Test] 
     public void LogicTest_SpawnCollectItem()
     {
+        bool isSpawned = false;
+        RhythmCollectItem newestItem = null;
+        RhythmCollectGameModel_EventHandler.Instance.OnSpawnCollectItem += (collectItem)=>
+        {
+            isSpawned = true;
+            newestItem = collectItem;
+        };
 
+        bool isClicked = false;
+        RhythmCollectGameModel_EventHandler.Instance.OnClickCollectItem += (clickItem) => { isClicked = true; };
+
+        //1beat
+        model.UpdateTime(2);
+
+        //生成1個 0>1
+        Assert.IsTrue(isSpawned);
+        Assert.AreEqual(1, model.GetCurrentAliveCollectItemCount);
+        Assert.AreEqual(0, model.GetClickedCollectItemCount);
+        isSpawned = false;
+
+        //1beat
+        model.UpdateTime(2);
+
+        //生成1個 1>2
+        Assert.IsTrue(isSpawned);
+        Assert.AreEqual(2, model.GetCurrentAliveCollectItemCount);
+        Assert.AreEqual(0, model.GetClickedCollectItemCount);
+        isSpawned = false;
+
+        //點擊1個, 2>1
+        newestItem.TriggerItem(model.currentHeadings);
+        Assert.IsTrue(isClicked);
+        Assert.AreEqual(1, model.GetCurrentAliveCollectItemCount);
+        Assert.AreEqual(1, model.GetClickedCollectItemCount);
+        isClicked = false;
+
+        //1beat
+        model.UpdateTime(2);
+
+        //生成1個 1>2
+        Assert.IsTrue(isSpawned);
+        Assert.AreEqual(2, model.GetCurrentAliveCollectItemCount);
+        Assert.AreEqual(1, model.GetClickedCollectItemCount);
+        isSpawned = false;
+
+        //2beat
+        model.UpdateTime(2);
+        model.UpdateTime(2);
+
+        //生成1個 2>4
+        Assert.IsTrue(isSpawned);
+        Assert.AreEqual(4, model.GetCurrentAliveCollectItemCount);
+        Assert.AreEqual(1, model.GetClickedCollectItemCount);
+        isSpawned = false;
+
+        //1beat
+        model.UpdateTime(2);
+
+        //無生成
+        Assert.IsFalse(isSpawned);
+        Assert.AreEqual(4, model.GetCurrentAliveCollectItemCount);
+        Assert.AreEqual(1, model.GetClickedCollectItemCount);
+
+        //點擊1個 4>3
+        newestItem.TriggerItem(model.currentHeadings);
+        Assert.IsTrue(isClicked);
+        Assert.AreEqual(3, model.GetCurrentAliveCollectItemCount);
+        Assert.AreEqual(2, model.GetClickedCollectItemCount);
+        isClicked = false;
+
+        //1beat
+        model.UpdateTime(2);
+
+        //生成1個 3>4
+        Assert.IsTrue(isSpawned);
+        Assert.AreEqual(4, model.GetCurrentAliveCollectItemCount);
+        Assert.AreEqual(2, model.GetClickedCollectItemCount);
+        isSpawned = false;
     }
 
     [Test]

@@ -11,13 +11,6 @@ namespace GameCore
         private int currentBpm;
         private string[] currentHeadings;
         private List<RhythmCollectItem> collectItemRecordList;
-        private int GetCurrentAliveItemCount
-        {
-            get
-            {
-                return GetCurrentAliveItemList.Count;
-            }
-        }
 
         private List<RhythmCollectItem> GetCurrentAliveItemList
         {
@@ -30,14 +23,33 @@ namespace GameCore
             }
         }
 
-        public RhythmCollectItemSpawner(ICollectItemSpawnFrequency _spawnFreq, ICollectItemSpawnAttribute _spawnAttribute, int _bpm, string[] _headings)
+        public int GetCurrentAliveItemCount
+        {
+            get
+            {
+                return GetCurrentAliveItemList.Count;
+            }
+        }
+
+        public int GetClickedItemCount
+        {
+            get
+            {
+                if (collectItemRecordList.Count <= 0)
+                    return 0;
+                else
+                    return collectItemRecordList.Where(x => x.IsTriggered).Count();
+            }
+        }
+
+        public RhythmCollectItemSpawner(ICollectItemSpawnFrequency _spawnFreq, ICollectItemSpawnAttribute _spawnAttribute, int _initBpm, string[] _initHeadings)
         {
             collectItemRecordList = new List<RhythmCollectItem>();
             spawnTimer = new UpdateTimer(0);
             spawnFreqController = _spawnFreq;
             spawnAttributeController = _spawnAttribute;
-            currentBpm = _bpm;
-            currentHeadings = _headings;
+            currentBpm = _initBpm;
+            currentHeadings = _initHeadings;
 
             UpdateSpawnFreq();
 
@@ -59,6 +71,7 @@ namespace GameCore
         {
             RhythmCollectItemAttribute attributeInfo = spawnAttributeController.GetCollectItemAttribute(GetCurrentAliveItemList, currentHeadings);
             RhythmCollectItem newCollectItem = new RhythmCollectItem(attributeInfo);
+            collectItemRecordList.Add(newCollectItem);
 
             RhythmCollectGameModel_EventHandler.Instance.TriggerSpawnCollectItemEvent(newCollectItem);
         }

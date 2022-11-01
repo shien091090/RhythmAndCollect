@@ -8,6 +8,28 @@
         private IRhythmCollectGameEvaluator gameEvaluator;
         private RhythmCollectItemSpawner collectItemSpawner;
 
+        public int GetCurrentAliveCollectItemCount
+        {
+            get
+            {
+                if (collectItemSpawner == null)
+                    return 0;
+                else
+                    return collectItemSpawner.GetCurrentAliveItemCount;
+            }
+        }
+
+        public int GetClickedCollectItemCount
+        {
+            get
+            {
+                if (collectItemSpawner == null)
+                    return 0;
+                else
+                    return collectItemSpawner.GetClickedItemCount;
+            }
+        }
+
         private void Init()
         {
 
@@ -72,6 +94,9 @@
         {
             if (bpmController != null)
                 bpmController.Update(deltaTime);
+
+            if (collectItemSpawner != null)
+                collectItemSpawner.Update(deltaTime);
         }
     }
 }

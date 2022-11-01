@@ -5,7 +5,7 @@ namespace GameCore
 {
     public class BPMController
     {
-        private int bpm;
+        public int bpm { private set; get; }
         IBeatPrecisionRateEvaluator evaluator;
         public bool isAlreadyBeatFirstTime { private set; get; }
         private UpdateTimer mainTimer;
