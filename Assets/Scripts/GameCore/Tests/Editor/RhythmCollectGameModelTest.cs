@@ -68,7 +68,7 @@ public class RhythmCollectGameModelTest
             model.UpdateTime(1);
         }
 
-        RhythmCollectItem collectItem = new RhythmCollectItem(string.Empty, attributes, 10, 10);
+        RhythmCollectItem collectItem = new RhythmCollectItem(string.Empty, attributes, 10, 10, 10);
         collectItem.TriggerItem(model.currentHeadings);
 
         Assert.AreEqual(result_appScore, addScore);
@@ -97,7 +97,7 @@ public class RhythmCollectGameModelTest
         if (attributeIsEmpty == false)
             testAttributes = new string[] { "紅色", "香菇", "翅膀" };
 
-        RhythmCollectItem collectItem = new RhythmCollectItem(string.Empty, testAttributes, 1, 1);
+        RhythmCollectItem collectItem = new RhythmCollectItem(string.Empty, testAttributes, 1, 1, 10);
 
         bool isCorrectClick = false;
         bool isEventReceived = false;

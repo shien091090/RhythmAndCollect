@@ -11,17 +11,31 @@ namespace GameCore
         public bool IsTriggered { private set; get; }
         public bool IsCorrectClick { private set; get; }
         public bool IsDisappeared { private set; get; }
+        private UpdateTimer lifeTimer;
 
-        public RhythmCollectItem(string _key, string[] _attributes, int _baseScore, int _baseHpIncrease)
+        public RhythmCollectItem(string _key, string[] _attributes, int _baseScore, int _baseHpIncrease, float _lifeTime)
         {
-            attributeInfo = new RhythmCollectItemAttribute(_key, _attributes, _baseScore, _baseHpIncrease);
-            IsTriggered = false;
+            Init(new RhythmCollectItemAttribute(_key, _attributes, _baseScore, _baseHpIncrease, _lifeTime));
         }
 
         public RhythmCollectItem(RhythmCollectItemAttribute _attributeInfo)
         {
+            Init(attributeInfo);
+        }
+
+        private void Init(RhythmCollectItemAttribute _attributeInfo)
+        {
             attributeInfo = _attributeInfo;
+            lifeTimer = new UpdateTimer(attributeInfo.lifeTime);
             IsTriggered = false;
+
+            lifeTimer.OnTriggerTimer += Disappear;
+        }
+
+        public void Update(float deltaTime)
+        {
+            if (lifeTimer != null)
+                lifeTimer.Update(deltaTime);
         }
 
         public void TriggerItem(string[] currentHeadings)
@@ -37,6 +51,8 @@ namespace GameCore
 
         public void Disappear()
         {
+            lifeTimer.OnTriggerTimer -= Disappear;
+
             IsDisappeared = true;
             RhythmCollectGameModel_EventHandler.Instance.TriggerCollectItemDisappearEvent(this);
         }
