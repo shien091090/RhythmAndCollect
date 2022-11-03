@@ -7,6 +7,7 @@
         private IRhythmCollectGameEvaluator gameEvaluator;
         private RhythmCollectItemSpawner collectItemSpawner;
         private RhythmCollectGameHeadingController headingController;
+        private GameSettingManager gameSettingManager;
 
         public int GetCurrentAliveCollectItemCount
         {
@@ -41,9 +42,11 @@
             }
         }
 
-        private void Init()
+        public void Init()
         {
-
+            gameSettingManager = new GameSettingManager();
+            HpController hpController = gameSettingManager.GetSetting<HpController>(1);
+            BPMController bpmController = gameSettingManager.GetSetting<BPMController>(1);
         }
 
         public void SetRegisterEvent(bool isListen)

@@ -20,4 +20,10 @@ public abstract class ASingleton<T>
             return GetInstance();
         }
     }
+
+    public static void RebuildInstance()
+    {
+        instance = default(T);
+        instance = Activator.CreateInstance<T>();
+    }
 }

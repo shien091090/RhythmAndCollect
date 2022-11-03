@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 
 namespace GameCore
 {
@@ -13,6 +14,11 @@ namespace GameCore
         public event Action<RhythmCollectItem> OnSpawnCollectItem;
         public event Action<int> OnAddScore;
         public event Action<string[]> OnHeadingsUpdated;
+
+        public void ClearAllEvent()
+        {
+            RebuildInstance();
+        }
 
         public void TriggerHpChangeEvent(int beforeHp, int afterHp)
         {

@@ -11,6 +11,8 @@ public class RhythmCollectGameModelTest
     [SetUp]
     public void InitTest()
     {
+        RhythmCollectGameModel_EventHandler.Instance.ClearAllEvent();
+
         model = RhythmCollectGameModel.Instance;
 
         DummyHeadingCreator dummyHeadingCreator = new DummyHeadingCreator(true);
@@ -78,6 +80,12 @@ public class RhythmCollectGameModelTest
         Assert.AreEqual(result_addHp, addHp);
         Assert.AreEqual(isMatchHeadings, collectItem.IsCorrectClick);
         Assert.AreEqual(overFirstBeat, model.bpmController.isAlreadyBeatFirstTime);
+    }
+
+    [Test]
+    public void InitModelTest()
+    {
+        model.Init();
     }
 
     [Test]
