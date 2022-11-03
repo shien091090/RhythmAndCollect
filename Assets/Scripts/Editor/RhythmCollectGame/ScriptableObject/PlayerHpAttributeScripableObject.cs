@@ -2,7 +2,7 @@
 
 namespace GameCore
 {
-    public class PlayerHpAttributeScripableObject : ScriptableObject, IGameDifficultyEvaluator<HpController>
+    public class PlayerHpAttributeScripableObject : ScriptableObject, IGameSettingGetter<HpController>
     {
         [SerializeField] private AnimationCurve difficultyToHpCurve;
 

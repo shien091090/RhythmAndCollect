@@ -2,7 +2,7 @@
 
 namespace GameCore
 {
-    public class BPMSettingScriptableObject : ScriptableObject, IGameDifficultyEvaluator<BPMController>
+    public class BPMSettingScriptableObject : ScriptableObject, IGameSettingGetter<BPMController>
     {
         [SerializeField] private AnimationCurve beatPrecisionRateCurve;
         [SerializeField] private AnimationCurve difficultyToBPMCurve;

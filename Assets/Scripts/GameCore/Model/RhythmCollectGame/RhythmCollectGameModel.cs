@@ -47,6 +47,7 @@
             gameSettingManager = new GameSettingManager();
             HpController hpController = gameSettingManager.GetSetting<HpController>(1);
             BPMController bpmController = gameSettingManager.GetSetting<BPMController>(1);
+            IRhythmCollectGameEvaluator gameEvaluator = gameSettingManager.GetSetting<IRhythmCollectGameEvaluator>(1);
         }
 
         public void SetRegisterEvent(bool isListen)

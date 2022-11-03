@@ -15,7 +15,7 @@ namespace GameCore
             foreach (string fileName in settingFileNames)
             {
                 string path = AssetDatabase.GUIDToAssetPath(fileName);
-                object settingObj = AssetDatabase.LoadAssetAtPath(path, typeof(IGameDifficultyEvaluator<T>));
+                object settingObj = AssetDatabase.LoadAssetAtPath(path, typeof(IGameSettingGetter<T>));
 
                 if (settingObj != null)
                 {
@@ -36,8 +36,8 @@ namespace GameCore
                 BuildGameSettingReference<T>();
 
             object settingObj = dict_gameDifficultyEvaluator[typeof(T)];
-            IGameDifficultyEvaluator<T> evaluator = (IGameDifficultyEvaluator<T>)settingObj;
-            return evaluator.GetGameSetting(difficulty);
+            IGameSettingGetter<T> gameSettingGetter = (IGameSettingGetter<T>)settingObj;
+            return gameSettingGetter.GetGameSetting(difficulty);
         }
     }
 }
