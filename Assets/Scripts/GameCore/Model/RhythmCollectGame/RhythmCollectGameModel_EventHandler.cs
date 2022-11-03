@@ -12,6 +12,7 @@ namespace GameCore
         public event Action<RhythmCollectItem> OnCollectItemDisappeared;
         public event Action<RhythmCollectItem> OnSpawnCollectItem;
         public event Action<int> OnAddScore;
+        public event Action<string[]> OnHeadingsUpdated;
 
         public void TriggerHpChangeEvent(int beforeHp, int afterHp)
         {
@@ -51,6 +52,11 @@ namespace GameCore
         public void TriggerAddScoreEvent(int score)
         {
             OnAddScore?.Invoke(score);
+        }
+
+        public void TriggerUpdateHeadingsEvent(string[] newHeadings)
+        {
+            OnHeadingsUpdated?.Invoke(newHeadings);
         }
     }
 }

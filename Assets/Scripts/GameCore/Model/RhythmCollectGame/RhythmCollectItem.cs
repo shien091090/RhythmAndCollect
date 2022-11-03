@@ -20,7 +20,7 @@ namespace GameCore
 
         public RhythmCollectItem(RhythmCollectItemAttribute _attributeInfo)
         {
-            Init(attributeInfo);
+            Init(_attributeInfo);
         }
 
         private void Init(RhythmCollectItemAttribute _attributeInfo)

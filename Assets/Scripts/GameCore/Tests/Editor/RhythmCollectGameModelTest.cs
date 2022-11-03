@@ -12,7 +12,10 @@ public class RhythmCollectGameModelTest
     public void InitTest()
     {
         model = RhythmCollectGameModel.Instance;
-        model.SetCurrentHeadings(new string[] { "紅色", "香菇", "翅膀" });
+
+        DummyHeadingCreator dummyHeadingCreator = new DummyHeadingCreator(true);
+        RhythmCollectGameHeadingController headingController = new RhythmCollectGameHeadingController(dummyHeadingCreator);
+        model.SetHeadingCreator(headingController);
 
         HpController hpController = new HpController(100);
         model.SetHpController(hpController);
@@ -26,7 +29,7 @@ public class RhythmCollectGameModelTest
 
         DummyCollectItemSpawnFrequency dummySpawnFrequency = new DummyCollectItemSpawnFrequency();
         DummyCollectItemSpawnAttribute dummySpawnAttribute = new DummyCollectItemSpawnAttribute();
-        RhythmCollectItemSpawner collectItemSpawner = new RhythmCollectItemSpawner(dummySpawnFrequency, dummySpawnAttribute, bpmController.bpm, model.currentHeadings);
+        RhythmCollectItemSpawner collectItemSpawner = new RhythmCollectItemSpawner(dummySpawnFrequency, dummySpawnAttribute, bpmController.bpm, model.GetCurrentHeadings);
         model.SetCollectItemSpawner(collectItemSpawner);
 
         model.SetRegisterEvent(true);
@@ -43,12 +46,12 @@ public class RhythmCollectGameModelTest
     {
         string[] attributes = null;
         if (isMatchHeadings)
-            attributes = model.currentHeadings;
+            attributes = model.GetCurrentHeadings;
         else
             attributes = new string[] { "黃色" };
 
         if (isCurrentHeadingIsNull)
-            model.SetCurrentHeadings(null);
+            model.SetHeadingCreator(null);
 
         HpController hpController = new HpController(100);
         hpController.SetHp(50);
@@ -69,7 +72,7 @@ public class RhythmCollectGameModelTest
         }
 
         RhythmCollectItem collectItem = new RhythmCollectItem(string.Empty, attributes, 10, 10, 10);
-        collectItem.TriggerItem(model.currentHeadings);
+        collectItem.TriggerItem(model.GetCurrentHeadings);
 
         Assert.AreEqual(result_appScore, addScore);
         Assert.AreEqual(result_addHp, addHp);
@@ -188,9 +191,31 @@ public class RhythmCollectGameModelTest
     }
 
     [Test]
-    public void LogicTest_CreateHeading()
+    [TestCase(1, 30)]
+    //每1beat換一次
+    //每3beat換一次
+    public void LogicTest_CreateHeadingIn30Beat(int changeBpmFreq, int result_changeTimes)
     {
+        int changeTimes = 0;
+        RhythmCollectGameModel_EventHandler.Instance.OnHeadingsUpdated += (newHeadings) => { changeTimes++; };
 
+        DummyHeadingCreator dummyHeadingCreator = new DummyHeadingCreator();
+        RhythmCollectGameHeadingController headingController = new RhythmCollectGameHeadingController(dummyHeadingCreator, changeBpmFreq);
+
+        int beatTimes = 0;
+        RhythmCollectGameModel_EventHandler.Instance.OnBeat += () => 
+        {
+            beatTimes++;
+            headingController.TriggerChangeCounter();
+        };
+
+        for (int i = 0; i < 30; i++)
+        {
+            model.UpdateTime(2);
+        }
+
+        Assert.AreEqual(30, beatTimes);
+        Assert.AreEqual(result_changeTimes, changeTimes);
     }
 
     [Test] 
@@ -226,7 +251,7 @@ public class RhythmCollectGameModelTest
         isSpawned = false;
 
         //點擊1個, 2>1
-        newestItem.TriggerItem(model.currentHeadings);
+        newestItem.TriggerItem(model.GetCurrentHeadings);
         Assert.IsTrue(isClicked);
         Assert.AreEqual(1, model.GetCurrentAliveCollectItemCount);
         Assert.AreEqual(1, model.GetClickedCollectItemCount);
@@ -260,7 +285,7 @@ public class RhythmCollectGameModelTest
         Assert.AreEqual(1, model.GetClickedCollectItemCount);
 
         //點擊1個 4>3
-        newestItem.TriggerItem(model.currentHeadings);
+        newestItem.TriggerItem(model.GetCurrentHeadings);
         Assert.IsTrue(isClicked);
         Assert.AreEqual(3, model.GetCurrentAliveCollectItemCount);
         Assert.AreEqual(2, model.GetClickedCollectItemCount);

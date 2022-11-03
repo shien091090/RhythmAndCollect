@@ -2,11 +2,11 @@
 {
     public partial class RhythmCollectGameModel : ASingleton<RhythmCollectGameModel>
     {
-        public string[] currentHeadings { private set; get; }
         private HpController hpController;
         public BPMController bpmController { private set; get; }
         private IRhythmCollectGameEvaluator gameEvaluator;
         private RhythmCollectItemSpawner collectItemSpawner;
+        private RhythmCollectGameHeadingController headingController;
 
         public int GetCurrentAliveCollectItemCount
         {
@@ -30,6 +30,17 @@
             }
         }
 
+        public string[] GetCurrentHeadings
+        {
+            get
+            {
+                if (headingController == null)
+                    return null;
+                else
+                    return headingController.currentHeadings;
+            }
+        }
+
         private void Init()
         {
 
@@ -39,15 +50,10 @@
         {
             RhythmCollectGameModel_EventHandler.Instance.OnClickCollectItem -= ClickCollectItem;
 
-            if(isListen)
+            if (isListen)
             {
                 RhythmCollectGameModel_EventHandler.Instance.OnClickCollectItem += ClickCollectItem;
             }
-        }
-
-        public void SetCurrentHeadings(string[] newHeadings)
-        {
-            currentHeadings = newHeadings;
         }
 
         public void SetHpController(HpController _hpController)
@@ -70,6 +76,11 @@
             collectItemSpawner = _spawner;
         }
 
+        public void SetHeadingCreator(RhythmCollectGameHeadingController _headingController)
+        {
+            headingController = _headingController;
+        }
+
         private void ClickCollectItem(RhythmCollectItem collectItem)
         {
             if (gameEvaluator == null)
@@ -77,10 +88,10 @@
 
             float precisionRate = 0;
 
-            if(bpmController != null)
+            if (bpmController != null)
                 precisionRate = bpmController.GetBeatPrecisionRate();
 
-            if(hpController != null)
+            if (hpController != null)
             {
                 int hpIncrease = gameEvaluator.EvaluateAddHp(collectItem.GetBaseHpIncrease, precisionRate, collectItem.IsCorrectClick);
                 hpController.AddHp(hpIncrease);
