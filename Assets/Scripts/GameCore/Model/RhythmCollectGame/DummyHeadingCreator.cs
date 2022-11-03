@@ -30,7 +30,7 @@
         public int GetPossibleCreateHeadingsCount()
         {
             if (isOnlyOneResultForDummy)
-                return 0;
+                return 1;
             else
                 return 3;
         }

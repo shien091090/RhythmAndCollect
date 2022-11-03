@@ -6,34 +6,39 @@ namespace GameCore
     {
         private IRhythmCollectGameHeadingCreator headingCreator;
         public string[] currentHeadings { private set; get; }
-        public int chagneFreq { private set; get; }
-        private int changeCounter;
+        private UpdateTimer changeHeadingTimer;
 
         public RhythmCollectGameHeadingController(IRhythmCollectGameHeadingCreator _headingCreator, int _freq = 0)
         {
             headingCreator = _headingCreator;
-            chagneFreq = _freq;
+            changeHeadingTimer = new UpdateTimer(_freq);
 
             CreateNewHeadings();
+
+            changeHeadingTimer.OnTriggerTimer += CreateNewHeadings;
         }
 
-        public void TriggerChangeCounter()
+        public void SetHeadingChangeFreq(int _freq)
         {
-            changeCounter++;
-            if (changeCounter >= chagneFreq)
-            {
-                CreateNewHeadings();
-                changeCounter = 0;
-            }
-                
+            changeHeadingTimer.SetResetTimeThreshold(_freq);
+        }
+
+        public void CounterChangeTick()
+        {
+            changeHeadingTimer.Update(1);
         }
 
         private void CreateNewHeadings()
         {
-            if (headingCreator.GetPossibleCreateHeadingsCount() <= 1)
+            if (headingCreator.GetPossibleCreateHeadingsCount() <= 0)
                 return;
 
+            bool isOnlyOnePossible = headingCreator.GetPossibleCreateHeadingsCount() == 1;
             string[] newHeadings = headingCreator.CreateHeadings();
+
+            if (isOnlyOnePossible && IsSameCurrentHeadings(newHeadings))
+                return;
+
             while (IsSameCurrentHeadings(newHeadings))
             {
                 newHeadings = headingCreator.CreateHeadings();

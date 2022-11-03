@@ -191,7 +191,7 @@ public class RhythmCollectGameModelTest
     }
 
     [Test]
-    [TestCase(1, 30)]
+    [TestCase(1, 31)]
     //每1beat換一次
     //每3beat換一次
     public void LogicTest_CreateHeadingIn30Beat(int changeBpmFreq, int result_changeTimes)
@@ -206,7 +206,7 @@ public class RhythmCollectGameModelTest
         RhythmCollectGameModel_EventHandler.Instance.OnBeat += () => 
         {
             beatTimes++;
-            headingController.TriggerChangeCounter();
+            headingController.CounterChangeTick();
         };
 
         for (int i = 0; i < 30; i++)
