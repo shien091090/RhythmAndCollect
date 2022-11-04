@@ -6,6 +6,9 @@ using GameCore;
 
 public class RhythmCollectGameModelTest
 {
+    //TODO : 把各gameIniObj的event註冊放到interface裡面
+    //TODO : 各game setting SO的欄位加中文說明
+
     private RhythmCollectGameModel model;
 
     [SetUp]
