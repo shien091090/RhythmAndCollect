@@ -49,6 +49,7 @@
             BPMController bpmController = gameSettingManager.GetSetting<BPMController>(1);
             IRhythmCollectGameEvaluator gameEvaluator = gameSettingManager.GetSetting<IRhythmCollectGameEvaluator>(1);
             RhythmCollectItemSpawner collectItemSpawner = gameSettingManager.GetSetting<RhythmCollectItemSpawner>();
+            RhythmCollectGameHeadingController headingController = gameSettingManager.GetSetting<RhythmCollectGameHeadingController>(1);
         }
 
         public void SetRegisterEvent(bool isListen)
