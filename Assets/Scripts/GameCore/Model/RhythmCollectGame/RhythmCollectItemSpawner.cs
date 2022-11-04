@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace GameCore
 {
-    public class RhythmCollectItemSpawner
+    public class RhythmCollectItemSpawner : IGameInit
     {
         private UpdateTimer spawnTimer;
         private ICollectItemSpawnFrequency spawnFreqController;
@@ -48,12 +48,22 @@ namespace GameCore
             spawnTimer = new UpdateTimer(0);
             spawnFreqController = _spawnFreq;
             spawnAttributeController = _spawnAttribute;
-            //currentBpm = _initBpm;
-            //currentHeadings = _initHeadings;
 
             UpdateSpawnFreq();
 
             spawnTimer.OnTriggerTimer += OnTriggerSpawnTimer;
+        }
+
+        public void BindEvent()
+        {
+            RhythmCollectGameModel_EventHandler.Instance.OnInitBPM += UpdateCurrentBPM;
+            RhythmCollectGameModel_EventHandler.Instance.OnInitHeadings += UpdateCurrentHeadings;
+        }
+
+        public void CancelBindEvent()
+        {
+            RhythmCollectGameModel_EventHandler.Instance.OnInitBPM -= UpdateCurrentBPM;
+            RhythmCollectGameModel_EventHandler.Instance.OnInitHeadings -= UpdateCurrentHeadings;
         }
 
         private void UpdateSpawnFreq()
@@ -65,6 +75,16 @@ namespace GameCore
         public void Update(float deltaTime)
         {
             spawnTimer.Update(deltaTime);
+        }
+
+        private void UpdateCurrentBPM(int newBpm)
+        {
+            currentBpm = newBpm;
+        }
+
+        private void UpdateCurrentHeadings(string[] newHeadings)
+        {
+            currentHeadings = newHeadings;
         }
 
         private void SpawnNewCollectItem()

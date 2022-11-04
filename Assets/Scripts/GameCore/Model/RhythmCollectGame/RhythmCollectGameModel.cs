@@ -1,4 +1,7 @@
-﻿namespace GameCore
+﻿using System;
+using System.Collections.Generic;
+
+namespace GameCore
 {
     public partial class RhythmCollectGameModel : ASingleton<RhythmCollectGameModel>
     {
@@ -8,6 +11,7 @@
         private RhythmCollectItemSpawner collectItemSpawner;
         private RhythmCollectGameHeadingController headingController;
         private GameSettingManager gameSettingManager;
+        private Dictionary<Type, IGameInit> gameInitData;
 
         public int GetCurrentAliveCollectItemCount
         {
@@ -48,17 +52,53 @@
             HpController hpController = gameSettingManager.GetSetting<HpController>(1);
             BPMController bpmController = gameSettingManager.GetSetting<BPMController>(1);
             IRhythmCollectGameEvaluator gameEvaluator = gameSettingManager.GetSetting<IRhythmCollectGameEvaluator>(1);
-            RhythmCollectItemSpawner collectItemSpawner = gameSettingManager.GetSetting<RhythmCollectItemSpawner>();
+            RhythmCollectItemSpawner collectItemSpawner = CreateSettingForInit(gameSettingManager.GetSetting<RhythmCollectItemSpawner>());
             RhythmCollectGameHeadingController headingController = gameSettingManager.GetSetting<RhythmCollectGameHeadingController>(1);
+
+            SetRegisterEvent(true);
+
+            SetHpController(hpController);
+            SetBPMController(bpmController);
+            SetGameEvaluator(gameEvaluator);
+            SetCollectItemSpawner(collectItemSpawner);
+            SetHeadingCreator(headingController);
+        }
+
+        private T CreateSettingForInit<T>(T setting) where T : IGameInit
+        {
+            if (gameInitData == null)
+                gameInitData = new Dictionary<Type, IGameInit>();
+
+            gameInitData[typeof(T)] = setting;
+
+            return setting;
         }
 
         public void SetRegisterEvent(bool isListen)
         {
+            SetInitSettingBindEvent(isListen);
+
             RhythmCollectGameModel_EventHandler.Instance.OnClickCollectItem -= ClickCollectItem;
 
             if (isListen)
             {
                 RhythmCollectGameModel_EventHandler.Instance.OnClickCollectItem += ClickCollectItem;
+            }
+        }
+
+        private void SetInitSettingBindEvent(bool isListen)
+        {
+            if (gameInitData == null || gameInitData.Count <= 0)
+                return;
+
+            foreach (KeyValuePair<Type, IGameInit> initInfoPair in gameInitData)
+            {
+                IGameInit initInfo = initInfoPair.Value;
+
+                if (isListen)
+                    initInfo.BindEvent();
+                else
+                    initInfo.CancelBindEvent();
             }
         }
 

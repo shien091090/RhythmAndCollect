@@ -5,6 +5,8 @@ namespace GameCore
 {
     public class RhythmCollectGameModel_EventHandler : ASingleton<RhythmCollectGameModel_EventHandler>
     {
+        public event Action<int> OnInitBPM;
+        public event Action<string[]> OnInitHeadings;
         public event Action<int, int> OnHpChangeTo;
         public event Action OnDead;
         public event Action OnBeat;
@@ -18,6 +20,16 @@ namespace GameCore
         public void ClearAllEvent()
         {
             RebuildInstance();
+        }
+
+        public void TriggerInitBPMEvent(int bpm)
+        {
+            OnInitBPM?.Invoke(bpm);
+        }
+
+        public void TriggerInitHeadingsEvent(string[] headings)
+        {
+            OnInitHeadings?.Invoke(headings);
         }
 
         public void TriggerHpChangeEvent(int beforeHp, int afterHp)

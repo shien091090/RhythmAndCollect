@@ -64,6 +64,5 @@ namespace GameCore
 
             return true;
         }
-
     }
 }
