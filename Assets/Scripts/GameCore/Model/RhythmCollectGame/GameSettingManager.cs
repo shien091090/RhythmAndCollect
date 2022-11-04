@@ -27,7 +27,7 @@ namespace GameCore
             dict_gameDifficultyEvaluator[typeof(T)] = null;
         }
 
-        public T GetSetting<T>(int difficulty)
+        public T GetSetting<T>(int difficulty = 0)
         {
             if (dict_gameDifficultyEvaluator == null)
                 dict_gameDifficultyEvaluator = new Dictionary<Type, object>();

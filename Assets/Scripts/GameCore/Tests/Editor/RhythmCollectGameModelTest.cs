@@ -31,7 +31,7 @@ public class RhythmCollectGameModelTest
 
         DummyCollectItemSpawnFrequency dummySpawnFrequency = new DummyCollectItemSpawnFrequency();
         DummyCollectItemSpawnAttribute dummySpawnAttribute = new DummyCollectItemSpawnAttribute();
-        RhythmCollectItemSpawner collectItemSpawner = new RhythmCollectItemSpawner(dummySpawnFrequency, dummySpawnAttribute, bpmController.bpm, model.GetCurrentHeadings);
+        RhythmCollectItemSpawner collectItemSpawner = new RhythmCollectItemSpawner(dummySpawnFrequency, dummySpawnAttribute);
         model.SetCollectItemSpawner(collectItemSpawner);
 
         model.SetRegisterEvent(true);

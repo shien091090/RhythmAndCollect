@@ -57,7 +57,7 @@ namespace GameCore
             RhythmCollectGameModel_EventHandler.Instance.TriggerCollectItemDisappearEvent(this);
         }
 
-        private bool IsAttributeMatchHeading(string[] currentHeadings)
+        public bool IsAttributeMatchHeading(string[] currentHeadings)
         {
             if (currentHeadings == null || currentHeadings.Length <= 0)
                 return true;

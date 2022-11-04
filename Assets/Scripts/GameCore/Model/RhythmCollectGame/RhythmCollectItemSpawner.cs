@@ -42,14 +42,14 @@ namespace GameCore
             }
         }
 
-        public RhythmCollectItemSpawner(ICollectItemSpawnFrequency _spawnFreq, ICollectItemSpawnAttribute _spawnAttribute, int _initBpm, string[] _initHeadings)
+        public RhythmCollectItemSpawner(ICollectItemSpawnFrequency _spawnFreq, ICollectItemSpawnAttribute _spawnAttribute)
         {
             collectItemRecordList = new List<RhythmCollectItem>();
             spawnTimer = new UpdateTimer(0);
             spawnFreqController = _spawnFreq;
             spawnAttributeController = _spawnAttribute;
-            currentBpm = _initBpm;
-            currentHeadings = _initHeadings;
+            //currentBpm = _initBpm;
+            //currentHeadings = _initHeadings;
 
             UpdateSpawnFreq();
 
